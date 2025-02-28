@@ -169,96 +169,85 @@ button {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    #welcome {
-        width: 70%;
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 36px;
-    }
-
-    p {
-        font-size: 16px;
-    }
-
     #header {
-        flex-direction: row;
+        display: flex;
         justify-content: space-between;
+        align-items: center;
+        padding: 10px 5%;
     }
 
-    #social-icons {
+    #logo {
+        order: 1;
+    }
+
+    #social-icons, #htp {
+        order: 2;
+        display: flex;
+        align-items: center;
         gap: 10px;
+    }
+
+    #welcome {
+        width: 60%;
+        padding: 2vw;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
 @media (max-width: 768px) {
-    #welcome {
-        width: 80%;
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 32px;
-    }
-
-    p {
-        font-size: 14px;
-    }
-
     #header {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
         padding: 10px;
     }
 
-    #social-icons {
-        flex-direction: row;
-        gap: 10px;
-        margin: 10px 0;
+    #logo {
+        order: 1;
     }
 
-    #htp {
-        margin-top: 10px;
+    #social-icons, #htp {
+        order: 2;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    #welcome {
+        width: 70%;
+        padding: 3vw;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
 @media (max-width: 480px) {
-    #welcome {
-        width: 90%;
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
-
-    p {
-        font-size: 12px;
-    }
-
-    button {
-        width: 100%;
-        padding: 8px;
-        font-size: 14px;
-    }
-
-    .social-icon {
-        width: 20px;
-        height: 20px;
-    }
-
     #header {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 5px;
     }
 
     #logo {
-        height: 35px;
+        order: 1;
     }
 
-    #footer {
-        font-size: 12px;
-        padding: 10px;
+    #social-icons, #htp {
+        order: 2;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    #welcome {
+        width: 85%;
+        padding: 4vw;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
     }
 }
