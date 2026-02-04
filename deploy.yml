@@ -1,0 +1,113 @@
+---
+
+- name: Build & Deploy application
+  hosts: deploy
+  become: true
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Update 
+      apt: 
+       update_cache: yes
+       cache_valid_time: 3600
+
+    - name: Clear cache
+      apt:
+       autoclean: yes
+       clean: yes
+
+    - name: Installrequied packages
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Add docker GPG key
+      apt_key:
+       url: https://download.docker.com/linux/ubuntu/gpg
+       state: present 
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        state: present
+
+    - name: Install Docker & Compose
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Clean up unused Docker data
+      shell: docker system prune -af
+
+    - name: Ensure destination directory exists
+      file:
+        path: /opt/3tier-app
+        state: directory
+        mode: '0755'
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Copy docker-compose file
+      copy:
+        src: docker-compose.yml
+        dest: /opt/3tier-app/docker-compose.yml
+
+    - name: Copy configuration files and folders
+      copy:
+        src: "{{ item }}"
+        dest: /opt/3tier-app/
+      loop:
+        - nginx.conf
+        - init.sql
+
+    - name: Docker login
+      community.docker.docker_login:
+        username: "{{ dockun }}"
+        password: "{{ dockps }}"
+
+    - name: Pull images one by one (Sequential Pull)
+      shell: "docker pull {{ item }}"
+      loop:
+        - mysql:8.0-debian
+        - nginx:1.18-alpine
+        - l4ksh1928/listmaker:latest
+
+    - name: Create local .env for Docker
+      copy:
+        dest: /opt/3tier-app/.env
+        content: |
+          MYSQL_PASSWORD={{ mysql_pass }}
+          MYSQL_DATABASE={{ mysql_db }}
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
+
+    - name: Deploy application
+      command: docker compose up -d
+      args:
+        chdir: /opt/3tier-app
+      environment:
+        MYSQL_PASSWORD: "{{ mysql_pass }}"
+        MYSQL_DATABASE: "{{ mysql_db }}"

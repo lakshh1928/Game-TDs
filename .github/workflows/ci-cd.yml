@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  push: 
+    branches: main
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Install BuildX
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/tds:latest
+  
+  deploy:
+    needs: build-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Install ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Run Ansible-Playbook
+        run: |
+          ansible-playbook -i inventory.ini deploy.yml \
+          --private-key ~/.ssh/id_rsa \
+          -u ubuntu \
+          -e "dockun=${{ secrets.DOCKER_USERNAME }}" \
+          -e "dockps=${{ secrets.DOCKER_PASSWORD }}" \
+          -e "mysql_pass=${{ secrets.MYSQL_PASSWORD }}" \
+          -e "mysql_db=${{ secrets.MYSQL_DATABASE }}" \
+          --ssh-common-args='-o StrictHostKeyChecking=no' 
