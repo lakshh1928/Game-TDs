@@ -58,7 +58,7 @@ services:
     depends_on:
       - db
     networks:
-      -tds
+      - tds
     deploy:
       resources:
         limits:
