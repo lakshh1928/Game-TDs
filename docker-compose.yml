@@ -1,0 +1,72 @@
+services:
+
+  nginx:
+    image: nginx:1.18-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volume: 
+      - ./nginx.conf:/etc/nginx/nginx/conf
+    depends_on:
+      - app1
+      - app2
+    networks:
+      - tds
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  db:
+    image: mysql:8.0-debian
+    container_name: mysql
+    volumes:
+      - tds_db:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    networks:
+      - tds
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+
+  app1:
+    build: .
+    container_name: app1
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    depends_on:
+      - db
+    networks:
+      - tds
+    deploy:
+      resources:
+        limit:
+          memory: 128M
+  
+  app2:
+    build: .
+    container_name: app2
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE} 
+    depends_on:
+      - db
+    networks:
+      -tds
+    deploy:
+      resources:
+        limit:
+          memory: 128M
+
+networks:
+  tds:
+    driver: bridge
+
+volumes:
+  tds_db: 

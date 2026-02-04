@@ -1,15 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-# Database Configuration (Point this to your MySQL container later)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:password@db/tds_db'
+# Use Environment Variable for DB URI (Crucial for DevOps)
+DB_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'mysql+pymysql://root:password@db/tds_db')
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
-# Database Model
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
@@ -17,15 +20,18 @@ class Player(db.Model):
 @app.route('/api/players', methods=['GET'])
 def get_players():
     players = Player.query.all()
-    return jsonify([p.name for p in players])
+    return jsonify([p.name for p in players]), 200
 
 @app.route('/api/players', methods=['POST'])
 def add_player():
     data = request.json
-    new_player = Player(name=data['name'])
-    db.session.add(new_player)
-    db.session.commit()
-    return jsonify({"message": "Player added"}), 201
+    try:
+        new_player = Player(name=data['name'])
+        db.session.add(new_player)
+        db.session.commit()
+        return jsonify({"message": "Player added"}), 201
+    except:
+        return jsonify({"error": "Exists or DB error"}), 400
 
 @app.route('/api/players/<name>', methods=['DELETE'])
 def delete_player(name):
@@ -33,7 +39,8 @@ def delete_player(name):
     if player:
         db.session.delete(player)
         db.session.commit()
-    return jsonify({"message": "Player removed"})
+        return jsonify({"message": "Removed"}), 200
+    return jsonify({"message": "Not found"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
