@@ -1,46 +1,47 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import Flask, jsonify
+import mysql.connector
 import os
+import socket
 
 app = Flask(__name__)
-CORS(app)
 
-# Use Environment Variable for DB URI (Crucial for DevOps)
-DB_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'mysql+pymysql://root:password@db/tds_db')
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+DB_PASSWORD = os.getenv('MYSQL_PASSWORD')
+DB_NAME = os.getenv('MYSQL_DATABASE')
+DB_HOST = "db"
+DB_USER = "root"
 
-db = SQLAlchemy(app)
+def get_db_connection():
+    return mysql.connector.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
 
-class Player(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
+@app.route('/')
+def home():
+    container_id = socket.gethostname()
+    return f"<h1>Hello from the Game-TDs App!</h1><p>Served by Container: <b>{container_id}</b></p>"
 
-@app.route('/api/players', methods=['GET'])
-def get_players():
-    players = Player.query.all()
-    return jsonify([p.name for p in players]), 200
-
-@app.route('/api/players', methods=['POST'])
-def add_player():
-    data = request.json
+@app.route('/health')
+def health_check():
     try:
-        new_player = Player(name=data['name'])
-        db.session.add(new_player)
-        db.session.commit()
-        return jsonify({"message": "Player added"}), 201
-    except:
-        return jsonify({"error": "Exists or DB error"}), 400
-
-@app.route('/api/players/<name>', methods=['DELETE'])
-def delete_player(name):
-    player = Player.query.filter_by(name=name).first()
-    if player:
-        db.session.delete(player)
-        db.session.commit()
-        return jsonify({"message": "Removed"}), 200
-    return jsonify({"message": "Not found"}), 404
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT DATABASE();")
+        db_name = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "status": "Success",
+            "database": db_name[0],
+            "container": socket.gethostname()
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "Database Error",
+            "error": str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
