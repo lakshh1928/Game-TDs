@@ -46,7 +46,7 @@ services:
       - tds
     deploy:
       resources:
-        limit:
+        limits:
           memory: 128M
   
   app2:
@@ -61,7 +61,7 @@ services:
       -tds
     deploy:
       resources:
-        limit:
+        limits:
           memory: 128M
 
 networks:
