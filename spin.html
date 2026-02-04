@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDS | Spin the Wheel</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+ <body>
+    
+    <div id="bg"></div>
+
+    <header id="header">
+        <img src="logo.png" alt="Logo" id="logo">
+        <div id="social-icons">
+            <a href="https://discord.gg/YF22Vbcy9G"><div id="dc" class="social-icon"></div></a>
+            <a href="https://www.instagram.com/lucifer.cpm/"><div id="ig" class="social-icon"></div></a>
+            <button id="htp">How to Play</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="welcome" style="padding: 20px;">
+            <h2>IT'S YOUR TURN</h2>
+            <p>Fate decides your destiny.</p>
+            
+            <div id="wheel-container">
+                <div style="width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid var(--primary-color); margin: 0 auto -10px auto; position: relative; z-index: 5;"></div>
+                
+                <div id="wheel">
+                    <svg width="300" height="300" viewBox="0 0 200 200">
+                        <circle cx="100" cy="100" r="95" fill="none" stroke="white" stroke-width="2"/>
+                        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="14" font-family="Poppins">WHEEL</text>
+                    </svg>
+                </div>
+                
+                <button id="spin-btn" class="primary-btn">SPIN!</button>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer">
+        © 2025 TDS Game | All Rights Reserved
+    </footer>
+
+    <div id="htp-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>How to Play</h2>
+            <br>
+            <p style="text-align: left; line-height: 2;">
+                1️⃣ Click Spin.<br>
+                2️⃣ Wait for the wheel to stop.<br>
+                3️⃣ Perform the task!
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>   
+    <script>
+        // Modal Logic
+        const modal = document.getElementById("htp-modal");
+        const btn = document.getElementById("htp");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() { modal.style.display = "flex"; }
+        span.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) {
+             if (event.target == modal) { modal.style.display = "none"; }
+        }
+    </script>
+ </body>   
+</html>
