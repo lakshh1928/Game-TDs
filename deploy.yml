@@ -92,7 +92,7 @@
       loop:
         - mysql:8.0-debian
         - nginx:1.18-alpine
-        - l4ksh1928/listmaker:latest
+        - l4ksh1928/tds:latest
 
     - name: Create local .env for Docker
       copy:

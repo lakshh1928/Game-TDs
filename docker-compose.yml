@@ -33,7 +33,7 @@ services:
           memory: 512M
 
   app1:
-    build: .
+    image: l4ksh1928/tds:latest
     container_name: app1
     environment:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -48,7 +48,7 @@ services:
           memory: 128M
 
   app2:
-    build: .
+    image: l4ksh1928/tds:latest
     container_name: app2
     environment:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
