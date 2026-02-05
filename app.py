@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 DB_USER = os.getenv('MYSQL_USER', 'root')
-DB_PASSWORD = os.getenv('MYSQL_PASSWORD', 'password')
+DB_PASSWORD = os.getenv('MYSQL_PASSWORD')
 DB_NAME = os.getenv('MYSQL_DATABASE', 'tds_db')
 DB_HOST = os.getenv('MYSQL_HOST', 'db')
 
