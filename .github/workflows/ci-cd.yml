@@ -65,4 +65,6 @@ jobs:
           -e "dockps=${{ secrets.DOCKER_PASSWORD }}" \
           -e "mysql_pass=${{ secrets.MYSQL_PASSWORD }}" \
           -e "mysql_db=${{ secrets.MYSQL_DATABASE }}" \
+          -e "mysql_ht=${{ secrets.MYSQL_HOST }}" \
+          -e "mysql_us=${{ secrets.MYSQL_USER }}" \
           --ssh-common-args='-o StrictHostKeyChecking=no' 

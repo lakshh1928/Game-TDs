@@ -7,10 +7,10 @@ import socket
 app = Flask(__name__)
 CORS(app)
 
-DB_USER = os.getenv('MYSQL_USER', 'root')
+DB_USER = os.getenv('MYSQL_USER')
 DB_PASSWORD = os.getenv('MYSQL_PASSWORD')
-DB_NAME = os.getenv('MYSQL_DATABASE', 'tds_db')
-DB_HOST = os.getenv('MYSQL_HOST', 'db')
+DB_NAME = os.getenv('MYSQL_DATABASE')
+DB_HOST = os.getenv('MYSQL_HOST')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

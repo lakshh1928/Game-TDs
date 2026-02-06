@@ -80,6 +80,7 @@
         dest: /opt/3tier-app/
       loop:
         - init.sql
+        - proxy/
 
     - name: Docker login
       community.docker.docker_login:
@@ -99,6 +100,8 @@
         content: |
           MYSQL_PASSWORD={{ mysql_pass }}
           MYSQL_DATABASE={{ mysql_db }}
+          MYSQL_USER={{ mysql_us }}
+          MYSQL_HOST={{ mysql_ht }}
         owner: ubuntu
         group: ubuntu
         mode: '0600'
@@ -110,3 +113,5 @@
       environment:
         MYSQL_PASSWORD: "{{ mysql_pass }}"
         MYSQL_DATABASE: "{{ mysql_db }}"
+        MYSQL_USER: "{{ mysql_us }}"
+        MYSQL_HOST: "{{ mysql_ht }}"
