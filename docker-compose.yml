@@ -23,9 +23,8 @@ services:
     volumes:
       - tds_db:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_files:
+      - .env
     networks:
       - tds
     deploy:
@@ -36,9 +35,8 @@ services:
   app1:
     image: l4ksh1928/tds:latest
     container_name: app1
-    environment:
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_files:
+      - .env
     depends_on:
       - db
     networks:
@@ -51,9 +49,8 @@ services:
   app2:
     image: l4ksh1928/tds:latest
     container_name: app2
-    environment:
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_files:
+      - .env
     depends_on:
       - db
     networks:

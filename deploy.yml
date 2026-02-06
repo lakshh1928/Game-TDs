@@ -80,7 +80,6 @@
         dest: /opt/3tier-app/
       loop:
         - init.sql
-        - proxy
 
     - name: Docker login
       community.docker.docker_login:
