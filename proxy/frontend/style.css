@@ -1,205 +1,305 @@
-/* Reset Styles */
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap');
+
+/* --- Reset & Core Variables --- */
+:root {
+    --primary-color: #ff4500; /* Neon Orange */
+    --secondary-color: #ff8c00; /* Dark Orange */
+    --dark-bg: #121212;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-color: #ffffff;
+    --shadow-glow: 0 0 15px rgba(255, 69, 0, 0.6);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Background */
-html, body {
-    height: 100%;
-    width: 100%;
-    background-color: black;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: url(bg.jpg);
-    background-size: cover;
-    filter: blur();
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    position: relative;
 }
 
-h2{
-    color: white;
-}
-
-/* Header */
-#header {
-    background: #2b2b2b;
-    height: 60px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
+/* --- Dynamic Background --- */
+#bg {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background: url("bg.jpg") no-repeat center center/cover;
+    z-index: -1;
+}
+
+/* Dark overlay to make text pop */
+#bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darkens the image */
+    backdrop-filter: blur(8px);
+}
+
+/* --- Header & Footer (Glassmorphism) --- */
+#header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 1000;
 }
 
 #logo {
-    height: 50px;
-    width: auto;
-    margin-left: 20px;
+    height: 45px;
+    filter: drop-shadow(0 0 5px var(--primary-color));
 }
 
-/* How to Play Button */
-#htp {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 15px;
-    color: white;
-    font-size: 16px;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#htp:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* Social Icons */
 #social-icons {
     display: flex;
     gap: 15px;
-    margin-left: auto;
-    margin-right: 5%;
+    align-items: center;
 }
 
 .social-icon {
-    width: 40px;
-    height: 40px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    filter: drop-shadow(1px 2px 6px black);
+    width: 35px;
+    height: 35px;
+    background-size: cover;
     border-radius: 50%;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
 }
 
 .social-icon:hover {
     transform: scale(1.1);
+    filter: drop-shadow(0 0 8px white);
 }
 
 #dc { background-image: url("dc.webp"); }
 #ig { background-image: url("inst.webp"); }
 
-#bg {
-    background: url("bg.jpg") no-repeat center/cover;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    filter: blur(4px);
-    opacity: 0.8;
+#htp {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* Hide Elements */
-.hidden {
-    display: none;
-}
-
-/* Footer */
-#footer {
-    background: black;
+#htp:hover {
+    background: var(--primary-color);
     color: white;
-    text-align: center;
-    line-height: 40px;
-    font-size: 14px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    left: 0;
+    box-shadow: var(--shadow-glow);
 }
 
-/* Modal Styles */
-.modal {
-    display: none;
+#footer {
     position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: black;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #888;
+    z-index: 1000;
+}
+
+/* --- Main Layouts (Flexbox Centering) --- */
+main, .center-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     z-index: 10;
+    padding: 20px;
+}
+
+/* --- Welcome Section (Index) --- */
+#welcome {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 700px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    animation: slideUp 0.8s ease-out;
+}
+
+#welcome h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    background: linear-gradient(to right, #ff4500, #ffcc00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+#welcome p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #e0e0e0;
+}
+
+/* --- Buttons --- */
+button.primary-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: var(--shadow-glow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8);
+}
+
+button.secondary-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button.secondary-btn:hover {
+    background: white;
+    color: black;
+}
+
+/* --- Game Setup Section --- */
+#player-setup h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px black;
+}
+
+/* Input Fields for Players */
+.player-input {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+#players {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* --- Wheel Section --- */
+#wheel-container {
+    text-align: center;
+}
+
+#wheel {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 5px solid white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    background: radial-gradient(circle, #333, #000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px auto;
+    position: relative;
+    overflow: hidden;
+    transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth spin */
+}
+
+/* --- Modal (How to Play) --- */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 2000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
+    background-color: rgba(0,0,0,0.85);
     justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
+    background: #1e1e1e;
+    padding: 30px;
+    border: 1px solid var(--primary-color);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
     text-align: center;
-    color: black;
     position: relative;
+    box-shadow: var(--shadow-glow);
 }
 
 .close {
     position: absolute;
     top: 10px;
-    right: 10px;
-    font-size: 24px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
     cursor: pointer;
 }
 
-/* Center Player Setup */
-#player-setup {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
+.close:hover { color: white; }
+
+/* --- Animations --- */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Player Input Container */
-#players {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-}
-
-/* Center and Style Buttons */
-#add-player, #start-game {
-    margin: 10px 0;
-    width: 200px;
-    text-align: center;
-    display: block; /* Ensures proper spacing */
-}
-
-/* Buttons */
-button {
-    background: #ff5722;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    background: #e64a19;
-}
-
-/* 🎯 Fix: Center the Wheel Container */
-#wheel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-#wheel {
-    width: 250px;
-    height: 250px;
-    background: red;
-    border-radius: 50%;
-    margin-bottom: 20px;
-    margin-top: 20px;
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    #welcome h1 { font-size: 2.5rem; }
+    #welcome { width: 90%; padding: 20px; }
+    #header { padding: 0 20px; }
+    #logo { height: 35px; }
 }

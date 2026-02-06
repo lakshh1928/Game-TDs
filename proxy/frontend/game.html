@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truth or Dare Game</title>
+    <title>TDS | Setup Players</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div id="bg"></div>
 
-    <!-- Header -->
     <header id="header">
         <img src="logo.png" alt="Logo" id="logo">
         <div id="social-icons">
@@ -19,49 +19,54 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main>
-        <div id="player-setup">
-            <h2>Enter Player Names</h2>
-            <div id="players">
-                <!-- Player name inputs will be added here -->
+        <div id="welcome">
+            <h2>WHO'S PLAYING?</h2>
+            <p>Enter the names of the brave souls.</p>
+            
+            <div id="input-area" style="margin-bottom: 20px;">
+                <input type="text" id="player-input" class="player-input" placeholder="Enter Player Name...">
             </div>
-            <button id="add-player">Add Player</button>
-            <button id="start-game">Start Game</button>
-        </div>
 
-        <div id="wheel-container" class="hidden">
-            <h2>Spin the Wheel</h2>
-            <div id="wheel">
-                <!-- 🎯 FIX: Adding a sample wheel representation -->
-                <svg width="200" height="200">
-                    <circle cx="100" cy="100" r="95" fill="yellow" stroke="black" stroke-width="5"/>
-                    <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="18px">🎡 Spin Me</text>
-                </svg>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <button id="add-player" class="secondary-btn">+ Add Player</button>
+                <button id="start-game" class="primary-btn">Start Game</button>
             </div>
-            <button id="spin-button">Spin</button>
+
+            <div id="players-list" style="width: 100%; max-width: 400px; max-height: 300px; overflow-y: auto;">
+                </div>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer id="footer">
-        &copy; 2025 Your Website | All Rights Reserved
+        © 2025 TDS Game | All Rights Reserved
     </footer>
 
-    <!-- How to Play Modal -->
     <div id="htp-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>How to Play</h2>
-            <p>1️⃣ Players take turns spinning the wheel.</p>
-            <p>2️⃣ If it lands on you, choose between Truth or Dare.</p>
-            <p>3️⃣ Answer truthfully or complete the dare.</p>
-            <p>4️⃣ The game continues until all players have had a turn!</p>
+            <br>
+            <p style="text-align: left; line-height: 2;">
+                1️⃣ Add Player Names.<br>
+                2️⃣ Spin the Wheel.<br>
+                3️⃣ Choose Truth or Dare.
+            </p>
         </div>
     </div>
 
-    
-
     <script src="script.js"></script>
+    
+    <script>
+        const modal = document.getElementById("htp-modal");
+        const btn = document.getElementById("htp");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() { modal.style.display = "flex"; }
+        span.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) {
+             if (event.target == modal) { modal.style.display = "none"; }
+        }
+    </script>
 </body>
 </html>

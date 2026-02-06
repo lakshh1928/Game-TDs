@@ -3,47 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDS Party Game</title>
-    <link rel="stylesheet" href="Project.css">
+    <title>TDS | The Ultimate Party Game</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
-    <!-- Background -->
     <div id="bg"></div>
 
-    <!-- Welcome Section -->
-    <div id="welcome">
-        <h1>WELCOME</h1>
-        <p>
-            Get ready for a whirlwind of fun, laughter, and unforgettable moments! Whether you're here to spill the truth,
-            take on daring challenges, or dive into hilarious and unexpected situations, TDS is your ultimate party game.
-            Gather your friends, family, or even new acquaintances—this game is all about breaking the ice, creating memories, 
-            and discovering sides of each other you never knew existed.
-        </p>
-        <button id="start">Start</button>
-    </div>
-
-    <!-- Header -->
     <header id="header">
-        <img src="logo.png" alt="Logo" id="logo">
+        <img src="logo.png" alt="TDS Logo" id="logo">
         <div id="social-icons">
-            <a href="https://discord.gg/YF22Vbcy9G"><div id="dc" class="social-icon"></div></a>
-            <a href="https://www.instagram.com/lucifer.cpm/"><div id="ig" class="social-icon"></div></a>
+            <a href="https://discord.gg/YF22Vbcy9G" target="_blank"><div id="dc" class="social-icon"></div></a>
+            <a href="https://www.instagram.com/lucifer.cpm/" target="_blank"><div id="ig" class="social-icon"></div></a>
             <button id="htp">How to Play</button>
         </div>
     </header>
 
-    <!-- Footer -->
+    <main>
+        <div id="welcome">
+            <h1>TRUTH OR DARE</h1>
+            <p>
+                Get ready for a whirlwind of fun! Whether you're here to spill the truth,
+                take on daring challenges, or dive into unexpected situations, TDS is your ultimate party game.
+                Break the ice and discover sides of your friends you never knew existed.
+            </p>
+            <button id="start" class="primary-btn">Start Party</button>
+        </div>
+    </main>
+
     <footer id="footer">
-        © 2025 Your Website | All Rights Reserved
+        © 2025 TDS Game | Designed for Fun
     </footer>
 
+    <div id="htp-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>How to Play</h2>
+            <br>
+            <p style="text-align: left; line-height: 2;">
+                1️⃣ Add Player Names.<br>
+                2️⃣ Spin the Wheel.<br>
+                3️⃣ Choose Truth or Dare.<br>
+                4️⃣ Complete the challenge or suffer the penalty!
+            </p>
+        </div>
+    </div>
+
     <script>
+        // Redirect Logic
         document.getElementById("start").addEventListener("click", function() {
-            window.location.href = "game.html"; // Redirect to game page
+            window.location.href = "game.html"; 
         });
+
+        // Modal Logic
+        const modal = document.getElementById("htp-modal");
+        const btn = document.getElementById("htp");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() { modal.style.display = "flex"; }
+        span.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) {
+            if (event.target == modal) { modal.style.display = "none"; }
+        }
     </script>
-
-
 </body>
 </html>
