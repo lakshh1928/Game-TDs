@@ -28,7 +28,15 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/tds:latest
-  
+
+      - name: Build & Push Nginx (Frontend)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./proxy
+          file: ./proxy/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/tdsnginx:latest 
+ 
   deploy:
     needs: build-push
     runs-on: ubuntu-latest

@@ -79,7 +79,6 @@
         src: "{{ item }}"
         dest: /opt/3tier-app/
       loop:
-        - nginx.conf
         - init.sql
 
     - name: Docker login
@@ -91,7 +90,7 @@
       shell: "docker pull {{ item }}"
       loop:
         - mysql:8.0-debian
-        - nginx:1.18-alpine
+        - l4ksh1928/tdsnginx:latest
         - l4ksh1928/tds:latest
 
     - name: Create local .env for Docker

@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:1.18-alpine
+    image: l4ksh1928/tdsnginx:latest
     container_name: nginx
     ports:
       - "80:80"
