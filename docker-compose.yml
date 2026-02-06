@@ -23,7 +23,7 @@ services:
     volumes:
       - tds_db:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    env_files:
+    env_file:
       - .env
     networks:
       - tds
@@ -35,7 +35,7 @@ services:
   app1:
     image: l4ksh1928/tds:latest
     container_name: app1
-    env_files:
+    env_file:
       - .env
     depends_on:
       - db
@@ -49,7 +49,7 @@ services:
   app2:
     image: l4ksh1928/tds:latest
     container_name: app2
-    env_files:
+    env_file:
       - .env
     depends_on:
       - db
