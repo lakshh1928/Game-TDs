@@ -1,10 +1,11 @@
 /* TDS Game Logic - 3-Tier Production Version */
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     // --- Configuration ---
-    const API_URL = "api/players"; 
-    let players = []; 
+    // Added leading slash to ensure it hits the root /api/ route in Nginx
+    const API_URL = "/api/players"; 
+    let players = [];
 
     // --- Select Elements ---
     const playerInput = document.getElementById("player-input");
@@ -15,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 1. CORE API FUNCTIONS ---
 
-    // GET: Fetch players from Database
     async function fetchPlayers() {
         try {
             const response = await fetch(API_URL);
@@ -28,11 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // POST: Add player to Database
     async function handleAddPlayer() {
         if (!playerInput) return;
         const name = playerInput.value.trim();
-        
+
         if (name === "") return alert("Please enter a name!");
         if (players.includes(name)) return alert("Player already exists!");
 
@@ -42,18 +41,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name })
             });
-            
+
             if (response.ok) {
                 playerInput.value = "";
                 await refreshUI();
+            } else {
+                const errorData = await response.json();
+                alert("Server Error: " + errorData.error);
             }
-        } else {
-            const errorData = await response.json();
-    	    alert("Server Error: " + errorData.error);
+        } catch (error) { // Added missing catch block to fix SyntaxError
+            console.error("Add player failed:", error);
+            alert("Connection error. Is the backend running?");
         }
     }
 
-    // DELETE: Remove player from Database
     window.removePlayer = async (name) => {
         try {
             const response = await fetch(`${API_URL}/${name}`, { method: 'DELETE' });
@@ -68,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     async function refreshUI() {
         await fetchPlayers();
         if (!playerListDiv) return;
-        
-        playerListDiv.innerHTML = ""; 
+
+        playerListDiv.innerHTML = "";
         if (players.length === 0) {
             playerListDiv.innerHTML = "<p style='color: #ccc; font-size: 0.9rem;'>No players added yet.</p>";
             return;
@@ -78,8 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
         players.forEach((player, index) => {
             const div = document.createElement("div");
             div.style.cssText = `
-                background: rgba(255,255,255,0.1); 
-                margin: 5px 0; padding: 10px; border-radius: 5px; 
+                background: rgba(255,255,255,0.1);
+                margin: 5px 0; padding: 10px; border-radius: 5px;
                 display: flex; justify-content: space-between;
                 align-items: center; border: 1px solid rgba(255,255,255,0.2);
             `;
@@ -93,10 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. PAGE LOGIC ---
 
-    // PAGE: Setup (game.html)
     if (playerListDiv) {
-        refreshUI(); 
-
+        refreshUI();
         if (addPlayerBtn) addPlayerBtn.addEventListener("click", handleAddPlayer);
         if (playerInput) {
             playerInput.addEventListener("keypress", (e) => {
@@ -116,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // PAGE: Spin Wheel (spin.html)
     if (wheel) {
         let currentRotation = 0;
         let isSpinning = false;
@@ -140,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 spinBtn.disabled = true;
                 spinBtn.innerText = "Spinning...";
 
-                const randomDegree = Math.floor(3600 + Math.random() * 360); 
+                const randomDegree = Math.floor(3600 + Math.random() * 360);
                 currentRotation += randomDegree;
 
                 wheel.style.transition = "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)";
@@ -150,15 +148,26 @@ document.addEventListener("DOMContentLoaded", () => {
                     isSpinning = false;
                     spinBtn.disabled = false;
                     spinBtn.innerText = "SPIN!";
-                    determineWinner(currentRotation);
                 }, 4000);
             });
         }
     }
 
-    // --- 4. WHEEL UTILITIES ---
+    // --- 4. WHEEL UTILITIES (Fixed missing logic) ---
 
     function setupWheel() {
         const sliceSize = 360 / players.length;
-        let gradientString = "";
-        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FF
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFD700", "#8A2BE2"];
+        let background = "conic-gradient(";
+        
+        players.forEach((player, i) => {
+            const color = colors[i % colors.length];
+            const start = i * sliceSize;
+            const end = (i + 1) * sliceSize;
+            background += `${color} ${start}deg ${end}deg${i === players.length - 1 ? "" : ", "}`;
+        });
+        
+        background += ")";
+        wheel.style.background = background;
+    }
+});
