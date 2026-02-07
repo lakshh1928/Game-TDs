@@ -43,6 +43,7 @@ def add_player():
         db.session.commit()
         return jsonify({"message": "Player added"}), 201
     except:
+        db.session.rollback()
         return jsonify({"error": "Player already exists"}), 400
 
 @app.route('/api/players/<name>', methods=['DELETE'])

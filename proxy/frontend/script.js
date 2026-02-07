@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     // --- Configuration ---
-    const API_URL = "/api/players"; 
+    const API_URL = "api/players"; 
     let players = []; 
 
     // --- Select Elements ---
