@@ -35,7 +35,15 @@ jobs:
           context: ./proxy
           file: ./proxy/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/tdsnginx:latest 
+          tags: ${{ secrets.DOCKER_USERNAME }}/tdsnginx:latest
+
+      - name: Build & Push Mysql
+        uses: docker/build-push-action@v6
+        with:
+          context: ./db
+          file: ./db/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/tdsmysql:latest
  
   deploy:
     needs: build-push

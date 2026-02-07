@@ -74,13 +74,6 @@
         src: docker-compose.yml
         dest: /opt/3tier-app/docker-compose.yml
 
-    - name: Copy configuration files and folders
-      copy:
-        src: "{{ item }}"
-        dest: /opt/3tier-app/
-      loop:
-        - init.sql
-
     - name: Docker login
       community.docker.docker_login:
         username: "{{ dockun }}"
@@ -89,7 +82,7 @@
     - name: Pull images one by one (Sequential Pull)
       shell: "docker pull {{ item }}"
       loop:
-        - mysql:8.0-debian
+        - l4ksh1928/tdsmysql:latest
         - l4ksh1928/tdsnginx:latest
         - l4ksh1928/tds:latest
 

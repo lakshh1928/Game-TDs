@@ -15,11 +15,10 @@ services:
           memory: 128M
 
   db:
-    image: mysql:8.0-debian
+    image: l4ksh1928/tdsmysql:latest
     container_name: db
     volumes:
       - tds_db:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     env_file:
       - .env
     networks:
