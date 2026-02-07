@@ -97,9 +97,8 @@
       copy:
         dest: /opt/3tier-app/.env
         content: |
-          MYSQL_PASSWORD={{ mysql_pass }}
+          MYSQL_ROOT_PASSWORD={{ mysql_pass }}
           MYSQL_DATABASE={{ mysql_db }}
-          MYSQL_USER={{ mysql_us }}
           MYSQL_HOST={{ mysql_ht }}
         owner: ubuntu
         group: ubuntu
@@ -110,7 +109,6 @@
       args:
         chdir: /opt/3tier-app
       environment:
-        MYSQL_PASSWORD: "{{ mysql_pass }}"
+        MYSQL_ROOT_PASSWORD: "{{ mysql_pass }}"
         MYSQL_DATABASE: "{{ mysql_db }}"
-        MYSQL_USER: "{{ mysql_us }}"
         MYSQL_HOST: "{{ mysql_ht }}"

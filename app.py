@@ -7,8 +7,8 @@ import socket
 app = Flask(__name__)
 CORS(app)
 
-DB_USER = os.getenv('MYSQL_USER')
-DB_PASSWORD = os.getenv('MYSQL_PASSWORD')
+DB_USER = os.getenv('MYSQL_USER', 'root')
+DB_PASSWORD = os.getenv('MYSQL_ROOT_PASSWORD')
 DB_NAME = os.getenv('MYSQL_DATABASE')
 DB_HOST = os.getenv('MYSQL_HOST')
 
@@ -18,6 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Player(db.Model):
+    __tablename__ = 'player'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
 

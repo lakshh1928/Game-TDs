@@ -47,8 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 playerInput.value = "";
                 await refreshUI();
             }
-        } catch (error) {
-            alert("Failed to add player. Is the Backend running?");
+        } else {
+            const errorData = await response.json();
+    	    alert("Server Error: " + errorData.error);
         }
     }
 
