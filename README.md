@@ -78,7 +78,7 @@ The project utilizes a fully automated pipeline (`.github/workflows/ci-cd.yml`):
 2.  **Configure Environment**
     Create a `.env` file:
     ```env
-    MYSQL_ROOT_PASSWORD=secret
+    MYSQL_ROOT_PASSWORD=password
     MYSQL_DATABASE=tds_db
     ```
 
