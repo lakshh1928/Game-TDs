@@ -3,8 +3,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // --- Configuration ---
-    // Added leading slash to ensure it hits the root /api/ route in Nginx
-    const API_URL = "/api/players"; 
+    // Using absolute path to ensure Nginx correctly proxies to /api/players
+    const API_URL = "/api/players";
     let players = [];
 
     // --- Select Elements ---
@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 1. CORE API FUNCTIONS ---
 
+    // GET: Fetch players from Database
     async function fetchPlayers() {
         try {
             const response = await fetch(API_URL);
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // POST: Add player to Database
     async function handleAddPlayer() {
         if (!playerInput) return;
         const name = playerInput.value.trim();
@@ -47,14 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 await refreshUI();
             } else {
                 const errorData = await response.json();
-                alert("Server Error: " + errorData.error);
+                alert("Server Error: " + (errorData.error || "Unknown error"));
             }
-        } catch (error) { // Added missing catch block to fix SyntaxError
+        } catch (error) {
             console.error("Add player failed:", error);
             alert("Connection error. Is the backend running?");
         }
     }
 
+    // DELETE: Remove player from Database
     window.removePlayer = async (name) => {
         try {
             const response = await fetch(`${API_URL}/${name}`, { method: 'DELETE' });
@@ -94,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 3. PAGE LOGIC ---
 
+    // PAGE: Setup (game.html)
     if (playerListDiv) {
         refreshUI();
         if (addPlayerBtn) addPlayerBtn.addEventListener("click", handleAddPlayer);
@@ -115,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // PAGE: Spin Wheel (spin.html)
     if (wheel) {
         let currentRotation = 0;
         let isSpinning = false;
@@ -148,25 +153,39 @@ document.addEventListener("DOMContentLoaded", () => {
                     isSpinning = false;
                     spinBtn.disabled = false;
                     spinBtn.innerText = "SPIN!";
+                    determineWinner(currentRotation);
                 }, 4000);
             });
         }
+
+        function determineWinner(rotation) {
+            const actualRotation = rotation % 360;
+            // Wheel rotates clockwise, so we subtract from 360 to find the top point
+            const pointerAngle = (360 - actualRotation) % 360; 
+            const sliceSize = 360 / players.length;
+            const winnerIndex = Math.floor(pointerAngle / sliceSize);
+            const winnerName = players[winnerIndex];
+            
+            setTimeout(() => {
+                alert(`🎯 The wheel has spoken! It is ${winnerName}'s turn!`);
+            }, 100);
+        }
     }
 
-    // --- 4. WHEEL UTILITIES (Fixed missing logic) ---
+    // --- 4. WHEEL UTILITIES ---
 
     function setupWheel() {
         const sliceSize = 360 / players.length;
         const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFD700", "#8A2BE2"];
         let background = "conic-gradient(";
-        
+
         players.forEach((player, i) => {
             const color = colors[i % colors.length];
             const start = i * sliceSize;
             const end = (i + 1) * sliceSize;
             background += `${color} ${start}deg ${end}deg${i === players.length - 1 ? "" : ", "}`;
         });
-        
+
         background += ")";
         wheel.style.background = background;
     }
